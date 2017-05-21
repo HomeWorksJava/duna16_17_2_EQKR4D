@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="hu">
+    <head>
+        <title>Blog</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="./newBlogStyle.css" >
+    </head>
+    <body>
+        <header class="header">
+            <img src="logo2.png" width="153" height="153" alt="me_blog" class="headerImg"/>
+        </header>
+        <section class="mainSection">
+
+            <form action="http://localhost:8080/newBlog/rest/blog/ujbejegyzes" method="POST" class="inputForm">
+                <label for="felhasznalonev" class="felhlab">Felhasználónév</label>
+                <input type="text" id="felhasznalonev" name="felhasznalonev" class="felhtext"><br>
+                <textarea class="commentnew" id="bejegyzes" name="bejegyzes"></textarea><br>
+
+                <button class="but1" type="submit">Küldés</button>
+            </form>
+            
+            <img src="border2.png" width="273" height="49" alt="border" class="img"/>
+        
+            <table id="tablazat" class="tabla">
+                <tr>
+                    <th>Felhasználónév</th>
+                    <th>Dátum</th>
+                    <th>Bejegyzés</th>
+                </tr>
+            </table>
+        
+            <script>
+                
+                loadLists("http://localhost:8080/newBlog/rest/blog/osszes","felhasznalonev","datum","szoveg");
+ 
+                function loadLists(url){
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open("GET", url , true);
+                    xmlHttp.setRequestHeader("Content-Type","application/json");
+                    xmlHttp.responseType = "json";
+                    var table = document.getElementById("tablazat");
+
+                    xmlHttp.onload = function()
+                    {
+                        var r = xmlHttp.response;
+                        
+                        for (var i in r[0])
+                        {
+                            var date = new Date(r[1][i]['datum']);
+                            
+                            var tr = document.createElement("tr");
+                            var td1 = document.createElement("td");
+                            td1.textContent = r[0][i]['felhasznalonev'];
+                            var td2 = document.createElement("td");
+                            td2.textContent = date.toLocaleDateString() + " " + date.toLocaleTimeString();
+                            var td3 = document.createElement("td");
+                            td3.textContent = r[1][i]['szoveg'];
+                            tr.appendChild(td1);
+                            tr.appendChild(td2);
+                            tr.appendChild(td3);
+                            table.appendChild(tr);
+                        }
+                        
+                     };                 
+                     xmlHttp.send();
+                }
+
+
+
+
+
+            </script>
+            
+        </section>
+    </body>
+    
+</html>
